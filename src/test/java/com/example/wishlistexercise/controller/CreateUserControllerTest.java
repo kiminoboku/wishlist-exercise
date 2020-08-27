@@ -1,19 +1,20 @@
 package com.example.wishlistexercise.controller;
 
+import com.example.wishlistexercise.model.User;
+import com.example.wishlistexercise.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 class CreateUserControllerTest {
@@ -26,8 +27,10 @@ class CreateUserControllerTest {
 
     @Test
     public void creatingNewUserEnd2EndTest() throws Exception {
-        mockMvc.perform(post("/create/{userName}", "FirstUser"))
-                .andExpect(status().isOk());
+        mockMvc.perform(post("/user")
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .content("{ \"name\":\"FirstUser\"}"))
+		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
         assertEquals("FirstUser", users.get(0).getName());
     }

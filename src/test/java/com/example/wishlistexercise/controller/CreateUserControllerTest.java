@@ -25,14 +25,24 @@ class CreateUserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    private String uri = "/user";
+
     @Test
     public void creatingNewUserEnd2EndTest() throws Exception {
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post(uri)
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .content("{ \"name\":\"FirstUser\"}"))
 		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
         assertEquals("FirstUser", users.get(0).getName());
+    }
+
+    @Test
+	public void shouldReturnStatus400WhenUserNameIsEmpty() throws Exception{
+	    mockMvc.perform(post(uri)
+			    .contentType(MediaType.APPLICATION_JSON)
+			    .content("{\"name\": }"))
+			    .andExpect(status().isBadRequest());
     }
 
 }

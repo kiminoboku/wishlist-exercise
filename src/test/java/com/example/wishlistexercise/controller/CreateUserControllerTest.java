@@ -25,23 +25,27 @@ class CreateUserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private String uri = "/user";
+    private static String USER_URI = "/user";
+
+    private static String correctUserPayload = "{\"name\":\"FirstUser\"}";
+
+    private static String invalidUserPayload = "{\"name\": }";
 
     @Test
-    public void creatingNewUserEnd2EndTest() throws Exception {
-        mockMvc.perform(post(uri)
+    public void shouldCreateAndStoreUser() throws Exception {
+        mockMvc.perform(post(USER_URI)
 		        .contentType(MediaType.APPLICATION_JSON)
-		        .content("{ \"name\":\"FirstUser\"}"))
+		        .content(correctUserPayload))
 		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
         assertEquals("FirstUser", users.get(0).getName());
     }
 
     @Test
-	public void shouldReturnStatus400WhenUserNameIsEmpty() throws Exception{
-	    mockMvc.perform(post(uri)
+	public void createNewUserShouldReturnStatus400WhenUserNameIsEmpty() throws Exception{
+	    mockMvc.perform(post(USER_URI)
 			    .contentType(MediaType.APPLICATION_JSON)
-			    .content("{\"name\": }"))
+			    .content(invalidUserPayload))
 			    .andExpect(status().isBadRequest());
     }
 

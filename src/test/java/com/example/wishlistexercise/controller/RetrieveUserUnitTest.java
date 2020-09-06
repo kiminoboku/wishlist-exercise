@@ -9,12 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.Mockito.verify;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserControllerTest {
+class RetrieveUserUnitTest {
 
 	@InjectMocks
 	UserController systemUnderTest;
@@ -22,28 +23,24 @@ class UserControllerTest {
 	@Mock
 	UserRepository userRepository;
 
-	public static User user = new User(1,"FirstUser");
+	public static Optional<User> user = Optional.of(new User(1, "FirstUser"));
 
 	@BeforeEach
 	public void init(){
-		when(userRepository.save(user)).thenReturn(user);
+		when(userRepository.findById(1)).thenReturn(user);
 	}
 
 	@Test
-	public void shouldSaveNewlyCreatedUser() {
+	public void shouldReturnUserWithGivenId() {
 
-		systemUnderTest.createUser(user);
+		Optional<User> actual = systemUnderTest.retrieveUserById(1);
 
-		verify(userRepository).save(user);
+		assertEquals(1, actual.get().getId());
+		assertEquals("FirstUser", actual.get().getName());
+
+
 	}
 
-	@Test
-	public void shouldReturnNewlyCreatedUser(){
 
-		User actual = systemUnderTest.createUser(user);
-		User expected = new User(1, "FirstUser");
-
-		assertThat(actual).isEqualToComparingFieldByField(expected);
-	}
 
 }

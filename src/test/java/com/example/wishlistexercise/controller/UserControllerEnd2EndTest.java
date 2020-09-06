@@ -10,14 +10,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class CreateUserControllerTest {
+class UserControllerEnd2EndTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -26,6 +28,8 @@ class CreateUserControllerTest {
     private UserRepository userRepository;
 
     private static String USER_URI = "/user";
+
+    private static String USER_ID_URI = "/user/1";
 
     private static String correctUserPayload = "{\"name\":\"FirstUser\"}";
 
@@ -38,8 +42,8 @@ class CreateUserControllerTest {
 		        .content(correctUserPayload))
 		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
+	    assertEquals(1, users.get(0).getId());
         assertEquals("FirstUser", users.get(0).getName());
-        assertEquals(1, users.get(0).getId());
     }
 
     @Test
@@ -49,5 +53,14 @@ class CreateUserControllerTest {
 			    .content(invalidUserPayload))
 			    .andExpect(status().isBadRequest());
     }
+
+	@Test
+	public void shouldFetchUserWithGivenId() throws Exception {
+		mockMvc.perform(get(USER_ID_URI))
+				.andExpect(status().isOk());
+		Optional<User> user = userRepository.findById(2);
+		assertEquals(2, user.get().getId());
+		assertEquals("SecondUser", user.get().getName());
+	}
 
 }

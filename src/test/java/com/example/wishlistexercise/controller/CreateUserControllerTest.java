@@ -39,6 +39,7 @@ class CreateUserControllerTest {
 		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
         assertEquals("FirstUser", users.get(0).getName());
+        assertEquals(1, users.get(0).getId());
     }
 
     @Test

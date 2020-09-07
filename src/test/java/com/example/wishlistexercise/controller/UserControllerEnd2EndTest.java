@@ -31,7 +31,7 @@ class UserControllerEnd2EndTest {
 
     private static String USER_ID_URI = "/user/1";
 
-    private static String correctUserPayload = "{\"name\":\"FirstUser\"}";
+    private static String correctUserPayload = "{\"name\":\"SecondUser\"}";
 
     private static String invalidUserPayload = "{\"name\": }";
 
@@ -42,8 +42,8 @@ class UserControllerEnd2EndTest {
 		        .content(correctUserPayload))
 		        .andExpect(status().isOk());
         List<User> users = userRepository.findAll();
-	    assertEquals(1, users.get(0).getId());
-        assertEquals("FirstUser", users.get(0).getName());
+	    assertEquals(2, users.get(1).getId());
+        assertEquals("SecondUser", users.get(1).getName());
     }
 
     @Test
@@ -58,9 +58,9 @@ class UserControllerEnd2EndTest {
 	public void shouldFetchUserWithGivenId() throws Exception {
 		mockMvc.perform(get(USER_ID_URI))
 				.andExpect(status().isOk());
-		Optional<User> user = userRepository.findById(2);
-		assertEquals(2, user.get().getId());
-		assertEquals("SecondUser", user.get().getName());
+		Optional<User> user = userRepository.findById(1);
+		assertEquals(1, user.get().getId());
+		assertEquals("FirstUser", user.get().getName());
 	}
 
 }

@@ -2,7 +2,6 @@ package com.example.wishlistexercise.controller;
 
 import com.example.wishlistexercise.model.User;
 import com.example.wishlistexercise.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,22 +22,16 @@ class RetrieveUserUnitTest {
 	@Mock
 	UserRepository userRepository;
 
-	public static Optional<User> user = Optional.of(new User(1, "FirstUser"));
-
-	@BeforeEach
-	public void init(){
-		when(userRepository.findById(1)).thenReturn(user);
-	}
-
 	@Test
 	public void shouldReturnUserWithGivenId() {
+
+		Optional<User> user = Optional.of(new User(1, "FirstUser"));
+		when(userRepository.findById(1)).thenReturn(user);
 
 		Optional<User> actual = systemUnderTest.retrieveUserById(1);
 
 		assertEquals(1, actual.get().getId());
 		assertEquals("FirstUser", actual.get().getName());
-
-
 	}
 
 

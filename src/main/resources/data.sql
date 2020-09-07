@@ -1,1 +1,1 @@
-INSERT INTO user (id, name) VALUES (2, 'SecondUser');
+INSERT INTO user (id, name) VALUES (1, 'FirstUser');

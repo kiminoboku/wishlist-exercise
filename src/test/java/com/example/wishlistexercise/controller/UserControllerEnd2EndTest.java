@@ -2,17 +2,17 @@ package com.example.wishlistexercise.controller;
 
 import com.example.wishlistexercise.model.User;
 import com.example.wishlistexercise.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +27,9 @@ class UserControllerEnd2EndTest {
     @Autowired
     private UserRepository userRepository;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
     private static String USER_URI = "/user";
 
     private static String USER_ID_URI = "/user/1";
@@ -37,13 +40,15 @@ class UserControllerEnd2EndTest {
 
     @Test
     public void shouldCreateAndStoreUser() throws Exception {
-        mockMvc.perform(post(USER_URI)
+
+    	MvcResult result = mockMvc.perform(post(USER_URI)
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .content(correctUserPayload))
-		        .andExpect(status().isOk());
-        List<User> users = userRepository.findAll();
-	    assertEquals(2, users.get(1).getId());
-        assertEquals("SecondUser", users.get(1).getName());
+		        .andReturn();
+	    String contentAsString = result.getResponse().getContentAsString();
+	    User actual = objectMapper.readValue(contentAsString, User.class);
+
+        assertNotNull(actual.getId());
     }
 
     @Test
@@ -56,11 +61,14 @@ class UserControllerEnd2EndTest {
 
 	@Test
 	public void shouldFetchUserWithGivenId() throws Exception {
-		mockMvc.perform(get(USER_ID_URI))
-				.andExpect(status().isOk());
-		Optional<User> user = userRepository.findById(1);
-		assertEquals(1, user.get().getId());
-		assertEquals("FirstUser", user.get().getName());
+
+		MvcResult result = mockMvc.perform(get(USER_ID_URI)).andReturn();
+		String contentAsString = result.getResponse().getContentAsString();
+
+		User actual = objectMapper.readValue(contentAsString, User.class);
+		User expected = new User(1, "FirstUser");
+
+		assertThat(actual).isEqualToComparingFieldByField(expected);
 	}
 
 }

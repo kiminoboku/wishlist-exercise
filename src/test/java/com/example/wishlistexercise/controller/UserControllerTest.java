@@ -23,7 +23,7 @@ class UserControllerTest {
 	@Mock
 	UserRepository userRepository;
 
-	private User user = new User(1,"FirstUser");
+	private User user = new User(1, "FirstUser");
 
 
 	@Test
@@ -38,14 +38,14 @@ class UserControllerTest {
 
 
 	@Test
-	public void shouldReturnNewlyCreatedUser(){
+	public void shouldReturnNewlyCreatedUser() {
 
+		User expected = user;
 		when(userRepository.save(user)).thenReturn(user);
 
 		User actual = systemUnderTest.createUser(user);
-		User expected = user;
 
-		assertThat(actual).isEqualToComparingFieldByField(expected);
+		assertThat(actual).isEqualTo(expected);
 	}
 
 
@@ -53,13 +53,12 @@ class UserControllerTest {
 	public void shouldReturnUserWithGivenId() {
 
 		int userId = 1;
-		Optional<User> returnedUser = Optional.of(user);
-		when(userRepository.findById(userId)).thenReturn(returnedUser);
+		Optional<User> expected = Optional.of(user);
+		when(userRepository.findById(userId)).thenReturn(expected);
 
 		Optional<User> actual = systemUnderTest.retrieveUserById(userId);
 
-		assertThat(actual.get().getId()).isEqualTo(userId);
-		assertThat(actual.get().getName()).isEqualTo(user.getName());
+		assertThat(actual).isEqualTo(expected);
 	}
 
 }

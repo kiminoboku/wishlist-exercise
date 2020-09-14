@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class WishlistExerciseApplication {
 
-    public static void main(final String[] args) {
-        SpringApplication.run(WishlistExerciseApplication.class, args);
-    }
+	public static void main(final String[] args) {
+		SpringApplication.run(WishlistExerciseApplication.class, args);
+	}
 
 }

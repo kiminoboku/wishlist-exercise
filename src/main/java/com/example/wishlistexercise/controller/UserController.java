@@ -11,16 +11,16 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @PostMapping("/user")
-    public User createUser(@Valid @RequestBody User user){
-        return userRepository.save(user);
-    }
+	@PostMapping("/user")
+	public User createUser(@Valid @RequestBody User user) {
+		return userRepository.save(user);
+	}
 
-    @GetMapping("/user/{id}")
-	public Optional<User> retrieveUserById(@PathVariable Integer id){
-    	return userRepository.findById(id);
-    }
+	@GetMapping("/user/{id}")
+	public Optional<User> retrieveUserById(@PathVariable Integer id) {
+		return userRepository.findById(id);
+	}
 }

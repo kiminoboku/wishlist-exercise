@@ -8,7 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -18,17 +22,43 @@ class UserControllerTest {
 
 	@Mock
 	UserRepository userRepository;
-	
+
+	private User user = new User(1, "FirstUser");
+
 
 	@Test
 	public void shouldSaveNewlyCreatedUser() {
 
-		User user = new User("FirstUser");
 		when(userRepository.save(user)).thenReturn(user);
 
 		systemUnderTest.createUser(user);
 
 		verify(userRepository).save(user);
+	}
+
+
+	@Test
+	public void shouldReturnNewlyCreatedUser() {
+
+		User expected = user;
+		when(userRepository.save(user)).thenReturn(user);
+
+		User actual = systemUnderTest.createUser(user);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+
+	@Test
+	public void shouldReturnUserWithGivenId() {
+
+		int userId = 1;
+		Optional<User> expected = Optional.of(user);
+		when(userRepository.findById(userId)).thenReturn(expected);
+
+		Optional<User> actual = systemUnderTest.retrieveUserById(userId);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 }

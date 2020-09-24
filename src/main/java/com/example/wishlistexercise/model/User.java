@@ -9,30 +9,53 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @NotEmpty(message = "Name is mandatory")
-    private String name;
+	@NotEmpty(message = "Name is mandatory")
+	private String name;
 
-    public String getName() {
-        return name;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public User(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public User(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public User() {
-    }
+	public User(String name) {
+		this.name = name;
+	}
+
+	public User(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public User() {
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		User user = (User) o;
+		return id == user.id &&
+				name.equals(user.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
+
 }

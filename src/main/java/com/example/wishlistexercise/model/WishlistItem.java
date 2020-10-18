@@ -1,19 +1,33 @@
 package com.example.wishlistexercise.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "items")
 public class WishlistItem {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private String name;
 
 	private String comments;
 
+	@Enumerated(EnumType.STRING)
 	private Priority priority;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "userId", nullable = false)
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Integer getId() {
 		return id;
@@ -50,10 +64,11 @@ public class WishlistItem {
 	public WishlistItem() {
 	}
 
-	public WishlistItem(Integer id, String name, String comments, Priority priority) {
+	public WishlistItem(Integer id, String name, String comments, Priority priority, User user) {
 		this.id = id;
 		this.name = name;
 		this.comments = comments;
 		this.priority = priority;
+		this.user = user;
 	}
 }

@@ -1,2 +1,2 @@
-INSERT INTO user(id, name)
+INSERT INTO users(id, name)
 VALUES (1, 'FirstUser');

@@ -4,10 +4,12 @@ import com.example.wishlistexercise.model.WishlistItem;
 import com.example.wishlistexercise.repository.UserRepository;
 import com.example.wishlistexercise.repository.WishlistItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class WishlistItemController {
@@ -25,7 +27,7 @@ public class WishlistItemController {
 		return userRepository.findById(userId).map(user -> {
 			item.setUser(user);
 			return itemRepository.save(item);
-		}).orElseThrow(() -> new RuntimeException("UserId " + userId + " not found"));
+		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 	}
 
 }

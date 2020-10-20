@@ -34,6 +34,8 @@ public class WishlistItemControllerEnd2EndTest {
 
 	private static String ITEM_URI = "/item/1";
 
+	private static String USER_NOT_FOUND_URI = "/item/5";
+
 	private static String correctItemPayload = "{\"name\":\"Book\", " +
 			"\"comments\": \"Book about programming\", " +
 			"\"priority\": \"MUST_HAVE\"}";
@@ -53,7 +55,6 @@ public class WishlistItemControllerEnd2EndTest {
 		String contentAsString = result.getResponse().getContentAsString();
 		WishlistItem actual = objectMapper.readValue(contentAsString, WishlistItem.class);
 		assertNotNull(actual.getId());
-
 	}
 
 	@Test
@@ -63,8 +64,15 @@ public class WishlistItemControllerEnd2EndTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(incorrectItemPayload))
 				.andExpect(status().isBadRequest());
-
 	}
 
+	@Test
+	public void saveWishlistItemShouldReturnStatus404WhenUserNotFound() throws Exception{
+
+		mockMvc.perform(post(USER_NOT_FOUND_URI)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(correctItemPayload))
+				.andExpect(status().isNotFound());
+	}
 
 }
